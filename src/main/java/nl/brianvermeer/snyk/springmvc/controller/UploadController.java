@@ -2,6 +2,7 @@ package nl.brianvermeer.snyk.springmvc.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,9 +12,11 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class UploadController {
@@ -26,8 +29,12 @@ public class UploadController {
     }
 
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public String submit(@RequestParam("file") final MultipartFile file, final ModelMap modelMap) {
+    public String submit(HttpServletResponse response, @RequestParam("file") MultipartFile file, ModelMap modelMap, @CookieValue(value="userId", required=false) String userID) {
         createUploadFolder();
+        if (userID == null) {
+            userID = UUID.randomUUID().toString();
+            setCookie(response,"userId", userID);
+        }
 
         if (file.isEmpty()) {
             return "fileUploadView";
@@ -36,13 +43,14 @@ public class UploadController {
         try {
 
             byte[] bytes = file.getBytes();
-
             if(file.getContentType().equals("application/zip")) { //unzip
                 System.out.println("ZIPFILE");
                 unzip(bytes, UPLOADED_FOLDER);
+                System.out.println("File upload: " + file.getOriginalFilename() + " and unzipped by user: " +userID);
             } else { //upload
                 Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
                 Files.write(path, bytes);
+                System.out.println("File upload: " + file.getOriginalFilename() + " by user: " +userID);
             }
 
         } catch (IOException e) {
@@ -50,13 +58,6 @@ public class UploadController {
         }
 
         modelMap.addAttribute("file", file);
-        return "fileUploadView";
-    }
-
-    @RequestMapping(value = "/uploadMultiFile", method = RequestMethod.POST)
-    public String submit(@RequestParam("files") final MultipartFile[] files, final ModelMap modelMap) {
-
-        modelMap.addAttribute("files", files);
         return "fileUploadView";
     }
 
@@ -96,6 +97,13 @@ public class UploadController {
         if (! directory.exists()){
             directory.mkdir();
         }
+    }
+
+    private static void setCookie(HttpServletResponse response, String key, String value) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(60 * 60 * 24 * 365); // a year
+//        cookie.setSecure(false);
+        response.addCookie(cookie);
     }
 
 }
