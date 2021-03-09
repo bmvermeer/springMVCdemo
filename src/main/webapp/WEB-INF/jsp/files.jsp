@@ -13,6 +13,10 @@
 </head>
 <body>
     <h2>Uploaded files</h2>
+    <c:if test="${folder!=null}">
+        <h3>Folder: ${folder}</h3>
+    </c:if>
+
 
     <table>
         <c:forEach items="${files}" var="file">

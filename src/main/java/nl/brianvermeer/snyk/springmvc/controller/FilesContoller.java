@@ -20,10 +20,10 @@ public class FilesContoller {
     public String displayFiles(Model model, @RequestParam(required = false) String folder) {
         UploadController.createUploadFolder();
         String destination = UploadController.UPLOADED_FOLDER;
-        System.out.println("folder="+folder);
         if (folder != null) {
             destination += "/"+folder;
         }
+        model.addAttribute("folder", folder);
         model.addAttribute("files", getFileListing(destination));
         return "files";
     }
