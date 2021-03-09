@@ -1,5 +1,6 @@
 package nl.brianvermeer.snyk.springmvc.controller;
 
+import nl.brianvermeer.snyk.springmvc.controller.util.CookieUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -32,8 +33,7 @@ public class UploadController {
     public String submit(HttpServletResponse response, @RequestParam("file") MultipartFile file, ModelMap modelMap, @CookieValue(value="userId", required=false) String userID) {
         createUploadFolder();
         if (userID == null) {
-            userID = UUID.randomUUID().toString();
-            setCookie(response,"userId", userID);
+            userID = CookieUtil.createUserCookie(response);
         }
 
         if (file.isEmpty()) {
@@ -99,11 +99,6 @@ public class UploadController {
         }
     }
 
-    private static void setCookie(HttpServletResponse response, String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60 * 60 * 24 * 365); // a year
-//        cookie.setSecure(false);
-        response.addCookie(cookie);
-    }
+
 
 }

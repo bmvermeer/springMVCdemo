@@ -1,9 +1,10 @@
 package nl.brianvermeer.snyk.springmvc.controller;
 
 import nl.brianvermeer.snyk.springmvc.model.FileDisplay;
+import nl.brianvermeer.snyk.springmvc.repo.MessageRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,15 +39,6 @@ public class FilesContoller {
                 .collect(Collectors.toList());
     }
 
-//    private static void setCookie(HttpServletResponse response, String key, String value) throws UnsupportedEncodingException {
-//        String encodedValue = URLEncoder.encode(value, "utf-8");
-//        Cookie cookie = new Cookie(key, encodedValue);
-//        cookie.setMaxAge(60 * 60 * 24 * 365); // a year
-//        cookie.setPath("/");
-//        // set to false because OpenRefine doesn't require HTTPS
-//        cookie.setSecure(false);
-//        response.addCookie(cookie);
-//    }
 
 
 
