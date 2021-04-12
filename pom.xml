@@ -43,6 +43,22 @@
           <artifactId>h2</artifactId>
           <version>1.4.200</version>
       </dependency>
+      <dependency>
+          <groupId>org.yaml</groupId>
+          <artifactId>snakeyaml</artifactId>
+          <version>1.25</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-text</artifactId>
+          <version>1.9</version>
+      </dependency>
+      <dependency>
+          <groupId>org.junit.jupiter</groupId>
+          <artifactId>junit-jupiter-engine</artifactId>
+          <version>5.4.2</version>
+          <scope>test</scope>
+      </dependency>
   </dependencies>
 
   <build>
@@ -54,6 +70,5 @@
               <version>2.2</version>
           </plugin>
       </plugins>
-
   </build>
 </project>
